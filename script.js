@@ -11,7 +11,7 @@ let currentFilter = 'all';
 let searchTerm = '';
 let currentUser = 'Guest User';
 let currentPage = 1;
-const POSTS_PER_PAGE = 5;
+const POSTS_PER_PAGE = window.innerWidth < 768 ? 3 : 5;
 
 // ---------- Initialization ----------
 document.addEventListener('DOMContentLoaded', async () => {
