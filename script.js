@@ -599,6 +599,73 @@ function showLoadingState() {
 function hideLoadingState() {
     // Replaced when renderBlogs runs
 }
+async function handleSubscribe() {
+  const email = document.getElementById('subscribeEmail').value.trim();
+  const messageEl = document.getElementById('subscribeMessage');
+  
+  // Clear any previous messages and reset classes
+  messageEl.classList.add('hidden');
+  messageEl.classList.remove('success', 'error', 'info');
+  
+  // Validate email
+  if (!email || !email.includes('@') || !email.includes('.')) {
+    messageEl.textContent = 'Please enter a valid email address';
+    messageEl.classList.add('error', 'visible');
+    messageEl.classList.remove('hidden');
+    return;
+  }
+  
+  try {
+    const { error } = await window.supabase
+      .from('subscribers')
+      .insert([{ 
+        email, 
+        name: currentUser,
+        verified: false
+      }]);
+    
+    if (error) {
+      // Handle duplicate email error (PostgreSQL error code 23505)
+      if (error.code === '23505') {
+        messageEl.textContent = '✓ This email is already subscribed!';
+        messageEl.classList.add('info', 'visible');
+      } else {
+        // Other database errors
+        console.error('Subscription DB error:', error);
+        messageEl.textContent = 'Subscription failed. Please try again.';
+        messageEl.classList.add('error', 'visible');
+      }
+    } else {
+      // Success - new subscriber
+      messageEl.textContent = '✓ Check your email to confirm subscription!';
+      messageEl.classList.add('success', 'visible');
+      
+      // Clear the input field
+      document.getElementById('subscribeEmail').value = '';
+    }
+    
+    // Show the message
+    messageEl.classList.remove('hidden');
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      messageEl.classList.add('hidden');
+      messageEl.classList.remove('success', 'error', 'info', 'visible');
+    }, 5000);
+    
+  } catch (error) {
+    // Network or unexpected errors
+    console.error('Subscription error:', error);
+    messageEl.textContent = 'Connection error. Please try again.';
+    messageEl.classList.add('error', 'visible');
+    messageEl.classList.remove('hidden');
+    
+    setTimeout(() => {
+      messageEl.classList.add('hidden');
+      messageEl.classList.remove('error', 'visible');
+    }, 5000);
+  }
+}
 
 // ---------- Global Exports ----------
 window.filterBlogs = filterBlogs;

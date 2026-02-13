@@ -1098,3 +1098,49 @@ main, .blog-section, .hero {
     align-items: center;
     gap: 8px;
 }
+/* Subscription form in footer */
+.subscription-form {
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    width: 100%;
+    max-width: 500px;
+}
+
+.subscription-form h4 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+#subscribeMessage {
+    margin-top: 12px;
+    padding: 8px 12px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    transition: opacity 0.3s;
+}
+
+#subscribeMessage.success {
+    background: rgba(0, 149, 255, 0.1);
+    color: var(--accent-blue);
+    border: 1px solid rgba(0, 149, 255, 0.3);
+}
+
+#subscribeMessage.error {
+    background: rgba(237, 73, 86, 0.1);
+    color: var(--like-red);
+    border: 1px solid rgba(237, 73, 86, 0.3);
+}
+
+#subscribeMessage.info {
+    background: rgba(0, 149, 255, 0.05);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+#subscribeMessage.hidden {
+    display: none;
+}
