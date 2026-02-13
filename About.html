@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SCOFFIE'S BLOG</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230095F6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2l2 4 4 2-4 2-2 4-2-4-4-2 4-2z'/%3E%3C/svg%3E">
+</head>
+<body>
+    <!-- Navigation (same as index.html) -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i data-lucide="sparkles" class="footer-icon"></i>
+                    <span>SCOFFIE'S</span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                    <a href="privacy.html" class="nav-link">Privacy</a>
+                    <a href="terms.html" class="nav-link">Terms</a>
+                    <a href="contact.html" class="nav-link">Contact</a>
+                </div>
+                <div class="nav-actions">
+                    <a href="admin.html" class="admin-btn">
+                        <i data-lucide="shield" class="icon-small"></i> Admin
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main style="margin-top: 80px; min-height: 60vh;">
+        <div class="container">
+            <div class="card" style="padding: 40px;">
+                <h1 style="font-size: 36px; margin-bottom: 20px;">About SCOFFIE'S</h1>
+                <p style="font-size: 18px; line-height: 1.7; margin-bottom: 20px;">
+                    Scoffie's is a modern, lightweight content platform built with simplicity and performance in mind. 
+                    We believe in clean design, fast loading, and giving creators full control over their stories.
+                </p>
+                <p style="font-size: 18px; line-height: 1.7; margin-bottom: 20px;">
+                    Our platform supports articles, video blogs (vlogs), and document uploads – all with a beautiful, 
+                    style feed. Comments and replies are fully supported, and every like is stored transparently.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="glass-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i data-lucide="sparkles" class="footer-icon"></i>
+                    <span>SCOFFIE'S</span>
+                </div>
+                <div class="footer-links">
+                    <a href="about.html">About</a>
+                    <a href="privacy.html">Privacy</a>
+                    <a href="terms.html">Terms</a>
+                    <a href="contact.html">Contact</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2026 SCOFFIE'S Blog. Crafted with ❤️CHILLOH
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+    </script>
+</body>
+</html>
