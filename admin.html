@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlassBlog Admin – Instagram Light</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Modal (Instagram flat design) -->
+    <div id="loginModal" class="modal hidden" style="background: rgba(255,255,255,0.95);">
+        <div class="modal-overlay"></div>
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); max-width: 400px; width: 90%; padding: 32px;">
+            <div style="text-align: center; margin-bottom: 24px;">
+                <i data-lucide="camera" style="width: 48px; height: 48px; color: var(--accent-blue);"></i>
+                <h2 style="font-size: 28px; font-weight: 600; margin-top: 8px;">Welcome Back</h2>
+                <p style="color: var(--text-secondary);">Admin login</p>
+            </div>
+            <form id="loginForm">
+                <div style="margin-bottom: 16px;">
+                    <input type="email" id="loginEmail" placeholder="Email" required class="admin-input" style="margin-bottom: 8px;">
+                    <input type="password" id="loginPassword" placeholder="Password" required class="admin-input">
+                </div>
+                <div id="loginError" class="hidden" style="color: var(--like-red); margin-bottom: 12px;"></div>
+                <button type="submit" class="publish-btn" style="background: var(--accent-blue);">
+                    <i data-lucide="log-in" class="icon-small"></i> Sign In
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard (only visible after login) -->
+    <div id="dashboard" class="dashboard hidden">
+        <nav class="admin-nav">
+            <div class="container">
+                <div class="admin-nav-container">
+                    <div class="admin-nav-brand">
+                        <i data-lucide="camera" style="width: 28px; height: 28px; color: var(--accent-blue);"></i>
+                        <span class="admin-brand-name">GlassBlog</span>
+                        <span class="admin-badge">Admin</span>
+                    </div>
+                    <div class="admin-nav-actions">
+                        <a href="index.html" class="admin-view-site">
+                            <i data-lucide="external-link" class="icon-small"></i> View Site
+                        </a>
+                        <button onclick="handleLogout()" class="admin-logout-btn">
+                            <i data-lucide="log-out" class="icon-small"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <main class="admin-main">
+            <div class="container">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner">
+                    <div>
+                        <h1 class="welcome-title">👋 Welcome, <span id="adminName">Admin</span></h1>
+                        <p style="color: var(--text-secondary);">Your content performance</p>
+                    </div>
+                    <div class="welcome-badge">
+                        <i data-lucide="cloud" class="icon-small"></i> Live
+                    </div>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-header">
+                            <div>
+                                <p class="admin-stat-label">Total Content</p>
+                                <h3 id="adminTotalBlogs" class="admin-stat-number">0</h3>
+                                <p class="admin-stat-sub">published</p>
+                            </div>
+                            <i data-lucide="file-text" style="width: 32px; height: 32px; color: var(--accent-blue);"></i>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-header">
+                            <div>
+                                <p class="admin-stat-label">Total Views</p>
+                                <h3 id="adminTotalViews" class="admin-stat-number">0</h3>
+                                <p class="admin-stat-sub">all time</p>
+                            </div>
+                            <i data-lucide="eye" style="width: 32px; height: 32px; color: #8E8E8E;"></i>
+                        </div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="admin-stat-header">
+                            <div>
+                                <p class="admin-stat-label">Comments</p>
+                                <h3 id="adminTotalComments" class="admin-stat-number">0</h3>
+                                <p class="admin-stat-sub">engagement</p>
+                            </div>
+                            <i data-lucide="message-circle" style="width: 32px; height: 32px; color: var(--like-red);"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create & Manage Grid -->
+                <div class="admin-grid">
+                    <!-- Create New Post -->
+                    <div class="admin-form-card">
+                        <h2 class="admin-form-title"><i data-lucide="plus-circle" style="margin-right: 8px;"></i> Create Post</h2>
+                        <form id="blogForm">
+                            <div class="type-selector">
+                                <label><input type="radio" name="blogType" value="article" checked class="hidden"><span class="type-label"><i data-lucide="file-text" class="icon-small"></i> Article</span></label>
+                                <label><input type="radio" name="blogType" value="vlog" class="hidden"><span class="type-label"><i data-lucide="video" class="icon-small"></i> Vlog</span></label>
+                                <label><input type="radio" name="blogType" value="docs" class="hidden"><span class="type-label"><i data-lucide="file" class="icon-small"></i> Doc</span></label>
+                            </div>
+
+                            <!-- Common fields -->
+                            <input type="text" id="blogTitle" placeholder="Title" required class="admin-input">
+                            <input type="text" id="blogAuthor" placeholder="Author" required class="admin-input">
+
+                            <!-- Cover image: URL + file upload -->
+                            <input type="url" id="coverImage" placeholder="Cover image URL (optional)" class="admin-input">
+                            <input type="file" id="coverImageFile" accept="image/*" class="admin-input">
+                            <div id="coverPreview" class="file-preview hidden">
+                                <img id="coverPreviewImg" src="" alt="Preview" style="max-width: 200px; max-height: 200px;">
+                                <button type="button" onclick="removeCoverFile()">Remove</button>
+                            </div>
+
+                            <input type="text" id="blogTags" placeholder="Tags (comma separated)" class="admin-input">
+
+                            <!-- Article content -->
+                            <div id="articleContentField">
+                                <textarea id="blogContent" placeholder="Write article..." rows="6" class="admin-textarea"></textarea>
+                            </div>
+
+                            <!-- Vlog: URL + file upload -->
+                            <div id="vlogUrlField" class="hidden">
+                                <input type="url" id="videoUrl" placeholder="YouTube/Vimeo URL (optional)" class="admin-input">
+                                <input type="file" id="videoFile" accept="video/*" class="admin-input">
+                                <div id="videoPreview" class="file-preview hidden">
+                                    <video id="videoPreviewPlayer" controls style="max-width: 300px; max-height: 200px;"></video>
+                                    <button type="button" onclick="removeVideoFile()">Remove</button>
+                                </div>
+                                <p class="field-hint"><i data-lucide="info" class="icon-small"></i> Supported: YouTube, Vimeo, or upload MP4/WebM</p>
+                            </div>
+
+                            <!-- Document upload -->
+                            <div id="documentUploadField" class="hidden">
+                                <div id="dropZone" class="drop-zone">
+                                    <input type="file" id="fileInput" class="hidden" accept=".pdf,.doc,.docx,.txt">
+                                    <div class="drop-zone-content">
+                                        <i data-lucide="upload-cloud" style="width: 40px; height: 40px; color: var(--text-secondary);"></i>
+                                        <p class="drop-zone-text"><span style="color: var(--accent-blue);">Click to upload</span> or drag</p>
+                                        <p class="drop-zone-hint">PDF, DOC, TXT (max 10MB)</p>
+                                    </div>
+                                </div>
+                                <div id="filePreview" class="file-preview hidden">
+                                    <span id="fileName" class="file-name"></span>
+                                    <button type="button" onclick="removeFile()" style="float: right; background: none; border: none;"><i data-lucide="x" style="color: var(--like-red);"></i></button>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="publish-btn">
+                                <i data-lucide="cloud" class="icon"></i> Publish
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal hidden" style="background: rgba(255,255,255,0.95);">
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); max-width: 600px; width: 90%; padding: 24px;">
+            <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 20px;">Edit Post</h3>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <input type="text" id="editTitle" placeholder="Title" required class="admin-input" style="margin-bottom: 12px;">
+                <textarea id="editContent" rows="6" placeholder="Content" class="admin-textarea"></textarea>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" onclick="closeEditModal()" style="padding: 8px 20px; background: none; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">Cancel</button>
+                    <button type="submit" class="publish-btn" style="width: auto; background: var(--accent-blue);">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal hidden" style="background: rgba(255,255,255,0.95);">
+        <div style="background: white; border: 1px solid var(--border-color); border-radius: var(--radius-lg); max-width: 400px; width: 90%; padding: 32px; text-align: center;">
+            <i data-lucide="alert-triangle" style="width: 48px; height: 48px; color: var(--like-red); margin-bottom: 16px;"></i>
+            <h3 style="font-size: 22px; font-weight: 600; margin-bottom: 8px;">Delete Post?</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">This action cannot be undone.</p>
+            <div style="display: flex; gap: 16px;">
+                <button onclick="closeDeleteModal()" style="flex: 1; padding: 12px; background: none; border: 1px solid var(--border-color); border-radius: var(--radius-sm);">Cancel</button>
+                <button onclick="confirmDelete()" style="flex: 1; padding: 12px; background: var(--like-red); color: white; border: none; border-radius: var(--radius-sm);">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="adminToast" class="admin-toast hidden">
+        <p id="adminToastMessage" class="toast-message"></p>
+    </div>
+
+    <script>
+        window.SUPABASE_URL = 'https://slxlxypodajykolluisn.supabase.co';
+        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNseGx4eXBvZGFqeWtvbGx1aXNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDI4NjQsImV4cCI6MjA4NjQ3ODg2NH0.s0zmYnWO0po-8kFOzrXBDlPNKnYMhMdxLGqFSAZIMGc';
+        window.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    </script>
+    <script src="admin.js"></script>
+</body>
+</html>

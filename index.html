@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlassBlog – Instagram Edition</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Instagram-style Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-container">
+                <div class="logo" onclick="window.location.reload()">
+                    <i data-lucide="sparkles" class="footer-icon"></i>
+                    <span>GlassBlog</span>
+                </div>
+
+                <div class="nav-links">
+                    <button onclick="filterBlogs('all')" class="nav-link">All</button>
+                    <button onclick="filterBlogs('article')" class="nav-link">Articles</button>
+                    <button onclick="filterBlogs('docs')" class="nav-link">Docs</button>
+                    <button onclick="filterBlogs('vlog')" class="nav-link">Vlogs</button>
+                </div>
+
+                <div class="nav-actions">
+                    <button onclick="toggleSearch()" class="icon-button">
+                        <i data-lucide="search" class="icon"></i>
+                    </button>
+                    <a href="admin.html" class="admin-btn">
+                        <i data-lucide="shield" class="icon-small"></i>
+                        Admin
+                    </a>
+                    <button onclick="toggleMobileMenu()" class="mobile-menu-btn">
+                        <i data-lucide="menu" class="icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="mobile-menu hidden">
+            <div class="mobile-menu-content">
+                <button onclick="filterBlogs('all')" class="mobile-nav-link">All</button>
+                <button onclick="filterBlogs('article')" class="mobile-nav-link">Articles</button>
+                <button onclick="filterBlogs('docs')" class="mobile-nav-link">Documents</button>
+                <button onclick="filterBlogs('vlog')" class="mobile-nav-link">Vlogs</button>
+                <hr class="divider">
+                <a href="admin.html" class="mobile-admin-link">Admin Dashboard</a>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div id="searchBar" class="search-bar hidden">
+            <div class="search-container">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search" class="search-input">
+            </div>
+        </div>
+    </nav>
+
+    <!-- Minimal Hero (optional) -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h1 class="hero-title">Discover Stories</h1>
+            <p class="hero-subtitle">A clean, Instagram‑like feed for your content.</p>
+            <div class="hero-buttons">
+                <button onclick="document.getElementById('blogSection').scrollIntoView({behavior: 'smooth'})" class="btn-primary">Start Reading</button>
+                <button onclick="filterBlogs('popular')" class="btn-secondary">Trending</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Feed (Vertical Instagram style) -->
+    <section id="blogSection" class="blog-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title" id="gridTitle">📸 Latest Stories</h2>
+                <div class="sort-container">
+                    <select id="sortSelect" onchange="sortBlogs()" class="sort-select">
+                        <option value="newest">🆕 Newest</option>
+                        <option value="popular">🔥 Popular</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="blogGrid" class="blog-interactive-grid">
+                <!-- Posts injected here -->
+            </div>
+
+            <div id="emptyState" class="empty-state hidden">
+                <p>No posts found. <button onclick="window.location.reload()">Clear filters</button></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Instagram‑style Modal (Image left, comments right) -->
+    <div id="blogModal" class="modal hidden">
+    <div class="modal-overlay" onclick="closeBlogModal()"></div>
+    <div class="modal-wrapper">
+        <!-- Everything is injected by openBlog() -->
+    </div>
+</div>
+    <!-- Toast Notification -->
+    <div id="toast" class="admin-toast hidden">
+        <div class="toast-dot"></div>
+        <p id="toastMessage" class="toast-message"></p>
+    </div>
+
+    <!-- Supabase Config -->
+    <script>
+        window.SUPABASE_URL = 'https://slxlxypodajykolluisn.supabase.co';
+        window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNseGx4eXBvZGFqeWtvbGx1aXNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5MDI4NjQsImV4cCI6MjA4NjQ3ODg2NH0.s0zmYnWO0po-8kFOzrXBDlPNKnYMhMdxLGqFSAZIMGc';
+        window.supabase = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+    </script>
+    <script src="script.js"></script>
+        <!-- Footer with glass morphic glow -->
+    <footer class="glass-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i data-lucide="sparkles" class="footer-icon"></i>
+                    <span>GlassBlog</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#">About</a>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Contact</a>
+                </div>
+                <div class="footer-copyright">
+                    © 2026 GlassBlog. Crafted with ❤️
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ... existing scripts ... -->
+</body>
+</html>
